@@ -1,29 +1,32 @@
 #Remember to load & define variables for the global environment, e.g. packages, objects
-library(shiny)
+library(shiny) 
 library(ggplot2)
 
-ui <- fluidPage(titlePanel("Title"),
-                sidebarLayout(
-                   sidebarPanel("Sidebar Panel",
-                                 selectInput(inputId="list",
-                                             label="List Label", 
-                                             choices=c("price", "carat"), 
-                                             selected="price"
-                                            )
-                                ),
-                   mainPanel("Main Panel",
-                                 tabsetPanel(
-                                   tabPanel(title="1st Plot", plotOutput(outputId = "plot1")) 
-                                            )
-                            )
-              )
- 
+ui <- fluidPage(
+  titlePanel("Example Shiny App: Distribution of Diamond stock by Price Bands"), 
+  sidebarLayout(
+    
+    sidebarPanel(
+      sliderInput(
+        inputId="bands",
+        label="Select No. of Price Bands", 
+        min=1,
+        max=30,
+        value=15)
+        ), 
+    
+    mainPanel(
+      plotOutput(outputId="plot") 
+      )
+  ) 
 )
+  
+server <- function(input, output){ 
+  output$plot <- renderPlot({
+    ggplot(data=diamonds, aes(x=price)) + geom_histogram() + stat_bin(bins=input$bands)
+    })
+} 
 
-server <- function(input, output) {
-  output$plot1 <- renderPlot({
-    ggplot(data=diamonds, aes_string(x=input$list)) + geom_histogram()
-  })
-}
+shinyApp(ui=ui, server=server)
 
-shinyApp(ui = ui, server = server)
+              
