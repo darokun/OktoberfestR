@@ -2,25 +2,27 @@
 library(shiny)
 library(ggplot2)
 
-ui <- fluidPage(
-  titlePanel("Title"), 
-  sidebarLayout(
-    sidebarPanel("Sidebar Panel"),
-    mainPanel("Main Panel",
-              tabsetPanel(
-                tabPanel(title="1st Plot", plotOutput(outputId = "plot1")),
-                tabPanel(title = "2nd Plot", plotOutput(outputId = "plot2"))
+ui <- fluidPage(titlePanel("Title"),
+                sidebarLayout(
+                   sidebarPanel("Sidebar Panel",
+                                 selectInput(inputId="list",
+                                             label="List Label", 
+                                             choices=c("price", "carat"), 
+                                             selected="price"
+                                            )
+                                ),
+                   mainPanel("Main Panel",
+                                 tabsetPanel(
+                                   tabPanel(title="1st Plot", plotOutput(outputId = "plot1")) 
+                                            )
+                            )
               )
-    )
-  )
+ 
 )
 
 server <- function(input, output) {
   output$plot1 <- renderPlot({
-    ggplot(data=diamonds, aes(x=price)) + geom_histogram()
-  })
-  output$plot2 <- renderPlot({
-    ggplot(data=diamonds, aes(x=carat)) + geom_histogram()
+    ggplot(data=diamonds, aes_string(x=input$list)) + geom_histogram()
   })
 }
 
