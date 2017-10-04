@@ -13,7 +13,7 @@ ui <- fluidPage(
         label="Select Cut of Diamond:", 
         choices = c("Fair", "Good", "Very Good"),
         selected = "Good")
-        ), 
+    ), 
     
     mainPanel(
       tabsetPanel( 
@@ -47,7 +47,7 @@ server <- function(input, output){
     ggplot(data=getDataset(), aes(x=clarity)) + geom_bar(aes(fill=color)) + scale_fill_brewer(palette="Spectral")
   })
 }
-      
+
 shinyApp(ui=ui, server=server)
 
-              
+
