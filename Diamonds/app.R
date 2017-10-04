@@ -1,5 +1,6 @@
 #Remember to load & define variables for the global environment, e.g. packages, objects
 library(shiny)
+library(ggplot2)
 
 ui <- fluidPage(
   titlePanel("Title"), 
