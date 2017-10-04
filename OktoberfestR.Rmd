@@ -2,17 +2,17 @@
 title: "OktoberfestR"
 author: "Daloha Rodr&iacute;guez-Molina"
 date: "9/27/2017"
-output: html_notebook
+output: html_document
 ---
 
-This is a quick analysis of publicly available Oktoberfest data following [@gresch's](https://github.com/gresch) [blog post](https://gresch.github.io/2017/09/14/201701oktoberfest1985-2016/), and a Shiny app to go along.
+This is a quick analysis of publicly available Oktoberfest data following @[gresch's](https://github.com/gresch) [blog post](https://gresch.github.io/2017/09/14/201701oktoberfest1985-2016), and a Shiny app to go along.
 
 # Setup and data overview
-This analysis containst publicly available Oktoberfest data 1985-2016. The data is available at the [Munich Opendata portal](https://www.opengov-muenchen.de/dataset/oktoberfest/resource/e0f664cf-6dd9-4743-bd2b-81a8b18bd1d2).   
-**Disclaimer**: Most of this code was taken from [@gresch's](https://github.com/gresch) [blog post](https://gresch.github.io/2017/09/14/201701oktoberfest1985-2016/). Only the Shiny app was created anew.
+This analysis contains publicly available Oktoberfest data 1985-2016. The data is available at the [Munich Opendata portal](https://www.opengov-muenchen.de/dataset/oktoberfest/resource/e0f664cf-6dd9-4743-bd2b-81a8b18bd1d2).   
+**Disclaimer**: Most of this code was taken from @[gresch's](https://github.com/gresch) [blog post](https://gresch.github.io/2017/09/14/201701oktoberfest1985-2016/). Only the Shiny app is to be created anew.
 
 ### Load the tidyverse and other libraries
-```{r}
+```{r message=FALSE}
 library(tidyverse)
 library(knitr)
 library(scales)
@@ -22,10 +22,15 @@ library(ggthemes)
 ### Constants
 ```{r}
 data_file <- 'https://www.opengov-muenchen.de/dataset/8d6c8251-7956-4f92-8c96-f79106aab828/resource/e0f664cf-6dd9-4743-bd2b-81a8b18bd1d2/download/oktoberfestgesamt19852016.csv'
+
 r_90_d <- theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
 caption <- "https://gresch.github.io/"
+
 my_theme <- theme_hc() 
+
 cp <- c("#1d3a7b", "#b53fa8", "#224dce", "#529480", "#23f2c0") # color palette "Song of the Unexpected Color Palette" http://www.color-hex.com/color-palette/29752
+
 ```
 
 ### Read data
@@ -53,6 +58,7 @@ data$beer_sold <- data$beer_sold * 100
 head(data)
 kable(summary(data))
 ```
+
 Each year is an observation. There are 32 observations and eight variables:
 
 * The **year** of the Oktoberfest
@@ -86,7 +92,9 @@ ggplot(data) +
   scale_x_continuous(breaks = seq(1985, 2016, by = 1)) + 
   r_90_d + my_theme
 ```
-[@gresch](https://github.com/gresch) says:
+
+@[gresch's](https://github.com/gresch) says:
+
 > Over the 31 years, on average, 6,341,935 people visited the Oktoberfest each year. What is interesting to note is that there was a major decline in visitors just after 9/11 in year 2001 – Oktoberfest starts usually end of September each year. The trend of yearly visitors looks the same as for the average daily visitors.
 
 ### Show divergence of visitors per year from the mean
@@ -111,6 +119,7 @@ ggplot(data) +
     breaks = seq(1985, 2016, by = 1)) + 
   r_90_d + my_theme
 ```
+
 > In this graph it is even better to see that in 1985 the most people visited the Oktoberfest. Then there is a stark decline of visitors with 1988 hitting the bottom with ~600,000 visitors less than average. After that the number of visitors increased until 2001 or *nine-eleven*.
 
 # Beer price development
@@ -134,7 +143,8 @@ ggplot(data) +
     breaks = seq(1985, 2016, by = 1)) + 
   r_90_d + my_theme
 ```
-> Not surprisingly, the beer price increased over the years. starting in 1985 with 3.20€ and hitting 10.75€ in 2015. That would be an average yearly increase of 
+
+> Not surprisingly, the beer price increased over the years. starting in 1985 with 3.20€ and hitting 10.50€ in 2016. That would be an average yearly increase of 
 
 $(10.57−3.20)/30=0.23774193548387096774193548387097$
 
@@ -161,6 +171,7 @@ data %>%
     limits = c(1985, 2017)) + 
   r_90_d + my_theme
 ```
+
 > Interestingly, in 1991 there was, on average, a major increase of 0.44€ per beer compared to 1990. Why would that be? The following years the increase levels off until 1996 to rise again with the year 2000 showing a major increase of 0.55€ compared to 1999, which is more than double than the average increase over time.
 
 # Beer sold over the years
@@ -184,6 +195,7 @@ ggplot(data) +
     limits = c(1985, 2017)) + 
   r_90_d + my_theme
 ```
+
 > On average, each year on each day 372,837 liters of beer was sold. The bar chart looks multimodel with a peak in 1999 and a low in 2001 (where less people visited the Oktoberfest). Since then, the amount of beer sold is increasing.
 
 ```{r}
@@ -272,5 +284,5 @@ data %>%
 
 > Of course this analysis is limited by the amount of data available for such analyses. Averaging over already aggregated data allow limited insights and statistics need to be interpreted carefully.
 
-If you have any feedback on the analysis, the approach or tools, please feel free to contact [@gresch](https://github.com/gresch)
+If you have any feedback on the analysis, the approach or tools, please feel free to contact @[gresch](https://github.com/gresch).
 
