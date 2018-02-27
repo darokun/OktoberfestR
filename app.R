@@ -34,13 +34,17 @@ ui <- fluidPage(
                   step = 1),
       
       selectInput("variable", "Select a variable to analyze:",
-                  choices = names(data[,-1]))
+                  choices = names(data[,-1])),
+      
+      textInput("title", "Provide a title for your plot:", 
+                value = "This is my plot")
       
     ),
     
     
     mainPanel(
-      DT::dataTableOutput("table")
+      DT::dataTableOutput("table"),
+      plotOutput("plot")
     )
   )
 )
@@ -59,6 +63,52 @@ server <- function(input, output) {
     data
   })
   
+  output$plot <- renderPlot({
+    data <- filtered_data()
+    
+    # ggplot(data, aes(gdpPercap, lifeExp)) +
+    #   geom_point() +
+    #   scale_x_log10()
+    
+    ggplot(data) + 
+      geom_bar(aes(year, input$variable), 
+               stat = "identity",
+               fill = "#27A366") + 
+      labs(
+        title = input$title,
+        x = "Year",
+        y = input$variable
+      ) 
+    # +
+      # scale_y_continuous(
+      #   labels = scales::comma, 
+      #   limits = c(0, 8000000),
+      #   breaks = seq(0, 8000000, by = 1000000)) +
+      # scale_x_continuous(breaks = seq(1985, 2016, by = 1))
+  })
+  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 shinyApp(ui, server)
