@@ -1,108 +1,64 @@
 library(shiny)
+library(tidyverse)
 library(datasets)
 
-ui <- shinyUI(fluidPage(
-  titlePanel("Column Plot"),
-  tabsetPanel(
-    tabPanel("Upload File",
-             titlePanel("Uploading Files"),
-             sidebarLayout(
-               sidebarPanel(
-                 fileInput('file1', 'Choose CSV File',
-                           accept=c('text/csv', 
-                                    'text/comma-separated-values,text/plain', 
-                                    '.csv')),
-                 
-                 # added interface for uploading data from
-                 # http://shiny.rstudio.com/gallery/file-upload.html
-                 tags$br(),
-                 checkboxInput('header', 'Header', TRUE),
-                 radioButtons('sep', 'Separator',
-                              c(Comma=',',
-                                Semicolon=';',
-                                Tab='\t'),
-                              ','),
-                 radioButtons('quote', 'Quote',
-                              c(None='',
-                                'Double Quote'='"',
-                                'Single Quote'="'"),
-                              '"')
-                 
-               ),
-               mainPanel(
-                 tableOutput('contents')
-               )
-             )
+data_file <- 'https://www.opengov-muenchen.de/dataset/8d6c8251-7956-4f92-8c96-f79106aab828/resource/e0f664cf-6dd9-4743-bd2b-81a8b18bd1d2/download/oktoberfestgesamt19852016.csv'
+data <- read_csv(data_file)
+
+# translate variable names to English
+data <- rename(data, year = jahr, 
+               duration_days = dauer,
+               visitor_year = besucher_gesamt, 
+               visitor_day = besucher_tag, 
+               beer_price = bier_preis,
+               beer_sold = bier_konsum,
+               chicken_price = hendl_preis,
+               chicken_sold = hendl_konsum)
+
+# unify measures
+data$visitor_year <- data$visitor_year * 1000000
+data$visitor_day <- data$visitor_day * 1000
+data$beer_sold <- data$beer_sold * 100
+
+
+ui <- fluidPage(
+  h1("OktoberfestR"),
+  h3("A web application to analyze Oktoberfest data"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      
+      sliderInput("year", "Select a range of years:",
+                  min = min(data$year), max = max(data$year), 
+                  value = c(min(data$year), max(data$year)),
+                  step = 1),
+      
+      selectInput("variable", "Select a variable to analyze:",
+                  choices = names(data[,-1]))
+      
     ),
-    tabPanel("First Type",
-             pageWithSidebar(
-               headerPanel('My First Plot'),
-               sidebarPanel(
-                 
-                 # "Empty inputs" - they will be updated after the data is uploaded
-                 selectInput('xcol', 'X Variable', ""),
-                 selectInput('ycol', 'Y Variable', "", selected = "")
-                 
-               ),
-               mainPanel(
-                 plotOutput('MyPlot')
-               )
-             )
-    )
     
+    
+    mainPanel(
+      DT::dataTableOutput("table")
+    )
   )
 )
-)
+  
 
-server <- shinyServer(function(input, output, session) {
-  # added "session" because updateSelectInput requires it
   
+
+server <- function(input, output) {
   
-  data <- reactive({ 
-    req(input$file1) ## ?req #  require that the input is available
-    
-    inFile <- input$file1 
-    
-    # tested with a following dataset: write.csv(mtcars, "mtcars.csv")
-    # and                              write.csv(iris, "iris.csv")
-    df <- read.csv(inFile$datapath, header = input$header, sep = input$sep,
-                   quote = input$quote)
-    
-    
-    # Update inputs (you could create an observer with both updateSel...)
-    # You can also constraint your choices. If you wanted select only numeric
-    # variables you could set "choices = sapply(df, is.numeric)"
-    # It depends on what do you want to do later on.
-    
-    updateSelectInput(session, inputId = 'xcol', label = 'X Variable',
-                      choices = names(df), selected = names(df))
-    updateSelectInput(session, inputId = 'ycol', label = 'Y Variable',
-                      choices = names(df), selected = names(df)[2])
-    
-    return(df)
+  filtered_data <- reactive({
+    data <- subset(data, year >= input$year[1] & year <= input$year[2])
   })
   
-  output$contents <- renderTable({
-    data()
+  output$table <- DT::renderDataTable({
+    data <- filtered_data()
+    data
   })
   
-  output$MyPlot <- renderPlot({
-    # for a histogram: remove the second variable (it has to be numeric as well):
-    # x    <- data()[, c(input$xcol, input$ycol)]
-    # bins <- nrow(data())
-    # hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    
-    # Correct way:
-    # x    <- data()[, input$xcol]
-    # bins <- nrow(data())
-    # hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    
-    
-    # I Since you have two inputs I decided to make a scatterplot
-    x <- data()[, c(input$xcol, input$ycol)]
-    plot(x)
-    
-  })
-})
+}
 
 shinyApp(ui, server)
