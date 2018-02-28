@@ -116,7 +116,7 @@ ggplot(data) +
 # Beer price development
 ```{r}
 ggplot(data) + 
-  geom_bar(aes(year, beer_price), 
+    geom_bar(aes(year, beer_price), 
            stat = "identity",
            fill = cp[2]) + 
   labs(
