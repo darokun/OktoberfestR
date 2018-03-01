@@ -2,6 +2,7 @@ library(shiny)
 library(tidyverse)
 library(datasets)
 library(plotly)
+library(colourpicker)
 
 data_file <- 'https://www.opengov-muenchen.de/dataset/8d6c8251-7956-4f92-8c96-f79106aab828/resource/e0f664cf-6dd9-4743-bd2b-81a8b18bd1d2/download/oktoberfestgesamt19852016.csv'
 data <- read_csv(data_file)
@@ -46,7 +47,9 @@ ui <- fluidPage(
                               # ,
                               # "Chicken price compared to previous year" = "chicken_price_prev"
                               ),
-                  selected = "visitors")
+                  selected = "visitors"),
+      
+      colourInput("col", "Select a color for your plots:", value = "#27A366")
       
     ),
     
@@ -101,7 +104,7 @@ server <- function(input, output) {
         ggplot(data) + 
           geom_bar(aes(year, visitor_year), 
                    stat = "identity",
-                   fill = "#27A366") + 
+                   fill = input$col) + 
           labs(
             title = "Number of visitors to the Oktoberfest vary and are currently in decline since 2011",
             subtitle = "Number of visitors to the Oktoberfest",
@@ -120,7 +123,7 @@ server <- function(input, output) {
           ggplot(data) + 
             geom_bar(aes(year, visitor_year - mean(visitor_year)), 
                      stat = "identity",
-                     fill = "#27A366") + 
+                     fill = input$col) + 
             labs(
               title = "Number of visitors to the Oktoberfest vary and are currently in decline since 2011",
               subtitle = "Divergence of visitors compared to the mean ",
@@ -141,7 +144,7 @@ server <- function(input, output) {
           ggplot(data) + 
             geom_bar(aes(year, beer_price), 
                      stat = "identity",
-                     fill = "#27A366") + 
+                     fill = input$col) + 
             labs(
               title = "Oktoberfest beer price increases 0.24 € per year, on average",
               subtitle = "Overview of beer price development -- Oktoberfest",
@@ -161,7 +164,7 @@ server <- function(input, output) {
           ggplot(data) + 
             geom_bar(aes(year, beer_sold / duration_days), 
                      stat = "identity",
-                     fill = "#27A366") + 
+                     fill = input$col) + 
             labs(
               title = "Regardless of fewer visitors in recent years, the amount of sold beer is higher than in the nineties",
               subtitle = "Overview of beer sold in Liter per day, on average -- Oktoberfest",
@@ -181,7 +184,7 @@ server <- function(input, output) {
           ggplot(data) + 
             geom_bar(aes(year, beer_sold / duration_days / visitor_day), 
                      stat = "identity",
-                     fill = "#27A366") + 
+                     fill = input$col) + 
             labs(
               title = "On average, Oktoberfest visitors drink more beer -- over 1.2 Liter in 2015",
               subtitle = "Overview of beer sold in Liter per day per visitor, on average",
@@ -201,7 +204,7 @@ server <- function(input, output) {
           ggplot(data) + 
             geom_bar(aes(year, chicken_price), 
                      stat = "identity",
-                     fill = "#27A366") + 
+                     fill = input$col) + 
             labs(
               title = "Oktoberfest chicken price increases over the years with a steep increase in 2000",
               subtitle = "Overview of chicken price",
