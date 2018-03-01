@@ -40,12 +40,11 @@ ui <- fluidPage(
                   choices = c("Number of visitors per year" = "visitors",
                               "Divergence of visitors compared to the mean" = "visitors_lag",
                               "Beer price per year" = "beer_price_year",
-                              # "Beer price compared to previous year" = "beer_price_prev",
+                              "Beer price compared to previous year" = "beer_price_prev",
                               "Beer sold on average (Liters/day)" = "beer_sold_year",
                               "Beer sold per visitor per day (Liters/day)" = "beer_visitor_day",
-                              "Chicken price per year" = "chicken_price_year"
-                              # ,
-                              # "Chicken price compared to previous year" = "chicken_price_prev"
+                              "Chicken price per year" = "chicken_price_year",
+                              "Chicken price compared to previous year" = "chicken_price_prev"
                               ),
                   selected = "visitors"),
       
@@ -89,11 +88,21 @@ server <- function(input, output) {
     data <- subset(data, year >= input$year[1] & year <= input$year[2])
   })
   
+  mutated_data_beer <- reactive({
+    filtered_data() %>%
+      mutate(increase = beer_price - lag(beer_price, default = NA))
+  })
+
+  mutated_data_chicken <- reactive({
+    filtered_data() %>%
+      mutate(increase = chicken_price - lag(chicken_price, default = NA))
+  })
+
+  
   output$table <- DT::renderDataTable({
     data <- filtered_data()
     data
   })
-  
   
   
   output$plot <- renderPlotly({
@@ -159,6 +168,26 @@ server <- function(input, output) {
               breaks = seq(min(data$year), max(data$year), by = 1))
         )
         
+      } else if (input$analysis == "beer_price_prev") {
+        ggplotly(
+          ggplot(mutated_data_beer()) + 
+            geom_bar(aes(year, increase), 
+                     stat = "identity",
+                     fill = input$col) + 
+            labs(
+              title = "There were steep beer price increases in 1991, 2000, 2007, and 2008 compared to the former years",
+              subtitle = "Beer price increase compared to former year -- Oktoberfest",
+              x = "Year",
+              y = "Beer price increase compared to year before"
+            ) +
+            scale_y_continuous(
+              labels = scales::dollar_format(suffix = "€", prefix = ""), 
+              breaks = seq(-10, +10, by = 0.05)) +
+            scale_x_continuous(
+              breaks = seq(min(data$year), max(data$year), by = 1), 
+              limits = c(min(data$year) - 1, max(data$year) + 1))
+        )
+        
       } else if (input$analysis == "beer_sold_year") {
         ggplotly(
           ggplot(data) + 
@@ -217,6 +246,26 @@ server <- function(input, output) {
               breaks = seq(0, 11.5, by = 1)) +
             scale_x_continuous(
               breaks = seq(min(data$year), max(data$year), by = 1))
+        )
+        
+      } else if (input$analysis == "chicken_price_prev") {
+        ggplotly(
+          ggplot(mutated_data_chicken()) + 
+            geom_bar(aes(year, increase), 
+                     stat = "identity",
+                     fill = input$col) + 
+            labs(
+              title = "Oktoberfest chicken price increased 46% in the year 2000",
+              subtitle = "Overview of chicken price compared to year before",
+              x = "Year",
+              y = "Chicken price increase compared to year before"
+            ) +
+            scale_y_continuous(
+              labels = scales::dollar_format(suffix = "€", prefix = ""), 
+              breaks = seq(-10, +10, by = 0.25)) +
+            scale_x_continuous(
+              breaks = seq(min(data$year), max(data$year), by = 1), 
+              limits = c(min(data$year) - 1, max(data$year) + 1))
         )
         
       }
