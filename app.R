@@ -116,7 +116,7 @@ ui <- fluidPage(
           title = "About",
           icon = icon("info-circle"),
           id = "about",
-          includeMarkdown("about.md")
+          includeMarkdown("README.md")
         )
       )
     )
