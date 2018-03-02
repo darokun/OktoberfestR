@@ -10,16 +10,16 @@ data <- read_csv(data_file)
 # translate variable names to English
 data <- rename(data, year = jahr, 
                duration_days = dauer,
-               visitor_year = besucher_gesamt, 
-               visitor_day = besucher_tag, 
+               visitors_year = besucher_gesamt, 
+               visitors_day = besucher_tag, 
                beer_price = bier_preis,
                beer_sold = bier_konsum,
                chicken_price = hendl_preis,
                chicken_sold = hendl_konsum)
 
 # unify measures
-data$visitor_year <- data$visitor_year * 1000000
-data$visitor_day <- data$visitor_day * 1000
+data$visitors_year <- data$visitors_year * 1000000
+data$visitors_day <- data$visitors_day * 1000
 data$beer_sold <- data$beer_sold * 100
 
 
@@ -125,7 +125,7 @@ ui <- fluidPage(
   hr(),
   div(id = "footer",
       div(id = "subsubtitle",
-          "2018 - Daloha Rodriguez-Molina -", 
+          "2018 | Daloha Rodriguez-Molina |", 
           tags$a(href ="https://twitter.com/darokun", "@darokun"))
       )
 )
@@ -162,7 +162,7 @@ server <- function(input, output) {
     if(input$analysis == "visitors") {
       ggplotly(
         ggplot(data) + 
-          geom_bar(aes(year, visitor_year), 
+          geom_bar(aes(year, visitors_year), 
                    stat = "identity",
                    fill = input$col) + 
           labs(
@@ -182,7 +182,7 @@ server <- function(input, output) {
       } else if (input$analysis == "visitors_lag") {
         ggplotly(
           ggplot(data) + 
-            geom_bar(aes(year, visitor_year - mean(visitor_year)), 
+            geom_bar(aes(year, visitors_year - mean(visitors_year)), 
                      stat = "identity",
                      fill = input$col) + 
             labs(
@@ -267,7 +267,7 @@ server <- function(input, output) {
       } else if (input$analysis == "beer_visitor_day") {
         ggplotly(
           ggplot(data) + 
-            geom_bar(aes(year, beer_sold / duration_days / visitor_day), 
+            geom_bar(aes(year, beer_sold / duration_days / visitors_day), 
                      stat = "identity",
                      fill = input$col) + 
             labs(

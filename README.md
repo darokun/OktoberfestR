@@ -27,7 +27,7 @@ This shiny app was made by [Daloha Rodriguez-Molina](https://drmolina.netlify.co
 
 
 ### Code and Issues
-You may find the code for this shiny app [here](https://github.com/darokun/OktoberfestR)
+You may find the code for this shiny app [here](https://github.com/darokun/OktoberfestR).     
 If you've found any issues, please click [here](https://github.com/darokun/OktoberfestR/issues) and let me know!
 
 
