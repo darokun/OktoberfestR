@@ -67,8 +67,8 @@ ui <- fluidPage(
     sidebarPanel(
       
       h2("OktoberfestR"),
-      h6("Code available on", tags$a(href = "https://github.com/darokun/OktoberfestR"), "GitHub"),
-      h6("Code license:", tags$a(href = ""), "MIT"),
+      h6("Code available on", tags$a(href = "https://github.com/darokun/OktoberfestR", "GitHub")),
+      h6("Code license:", tags$a(href = "https://github.com/darokun/OktoberfestR/blob/master/LICENSE", "MIT")),
       
       hr(),
       sliderInput("year", "Select a range of years:",
@@ -129,7 +129,9 @@ ui <- fluidPage(
   hr(),
   div(id = "footer",
       div(id = "subsubtitle",
-          "2018 | Daloha Rodriguez-Molina |", 
+          "2018 |", 
+          tags$a(href ="https://drmolina.netlify.com/", "Daloha Rodriguez-Molina"), 
+          " |", 
           tags$a(href ="https://twitter.com/darokun", "@darokun"))
       )
 )

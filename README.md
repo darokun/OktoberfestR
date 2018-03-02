@@ -2,7 +2,7 @@
 ### A web application to analyze Oktoberfest data
 
 This shiny app was inspired by a [blog post](https://gresch.github.io/2017/09/14/201701oktoberfest1985-2016/) made by @[gresch](https://gresch.github.io/) about analyzing [Oktoberfest](https://www.wikiwand.com/en/Oktoberfest) data and re-uses some of Gresch's code for the plots.     
-**Header image credit**: Oktoberfest by Ana Emília Carneiro Martins on [flickr](https://www.flickr.com/photos/miamartins/15504225795/) - [CC BY-NC 2.0](https://creativecommons.org/licenses/by-nc/2.0/)
+**Header image credit**: Oktoberfest by Ana Emília Carneiro Martins on [flickr](https://www.flickr.com/photos/miamartins/15504225795/) - License: [CC BY-NC 2.0](https://creativecommons.org/licenses/by-nc/2.0/)
 
 
 ### About the data set
@@ -37,14 +37,12 @@ This shiny app was made by [Daloha Rodriguez-Molina](https://drmolina.netlify.co
 You may find the code for this shiny app [here](https://github.com/darokun/OktoberfestR).     
 If you've found any issues, please click [here](https://github.com/darokun/OktoberfestR/issues) and let me know!
 
+
 ### LICENSE
-This web application uses the [MIT License](file.path("LICENSE")).
+This web application uses the [MIT License](https://github.com/darokun/OktoberfestR/blob/master/LICENSE).
+
 
 ### To do list:
-* add "code on github" in the app page 
-* add beer emojis somewhere?
-* add a README to repo
-* deploy!
+* fix plot titles and axis labels
 * blog about it
-* add netlify link to name on footer
 
