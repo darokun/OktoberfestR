@@ -18,6 +18,13 @@ The data set contais eight variables:
 * Mean price for one chicken for each year (**chicken_price**)
 * Whole amount of chickens sold for each year (**chicken_sold**)
 
+### Packages used
+* `shiny`: The R package that makes this web application possible. More info [here](http://shiny.rstudio.com/).
+* `tidyverse`: This app uses at least the `dplyr` and `ggplot2` packages. More info [here](https://www.tidyverse.org/).
+* `colourpicker`: For choosing the color of the plots. More info [here](https://github.com/daattali/colourpicker).
+* `plotly`: For making the plots interactive. More info [here](https://plot.ly/r/).
+* `DT`: For making the table look nice and add functionality. More info [here](https://rstudio.github.io/DT/).
+
 
 ### About the author
 This shiny app was made by [Daloha Rodriguez-Molina](https://drmolina.netlify.com/).
@@ -30,11 +37,12 @@ This shiny app was made by [Daloha Rodriguez-Molina](https://drmolina.netlify.co
 You may find the code for this shiny app [here](https://github.com/darokun/OktoberfestR).     
 If you've found any issues, please click [here](https://github.com/darokun/OktoberfestR/issues) and let me know!
 
+### LICENSE
+This web application uses the [MIT License](file.path("LICENSE")).
 
 ### To do list:
 * add "code on github" in the app page 
 * add beer emojis somewhere?
-* add License
 * add a README to repo
 * deploy!
 * blog about it

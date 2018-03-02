@@ -1,6 +1,5 @@
 library(shiny)
 library(tidyverse)
-library(datasets)
 library(plotly)
 library(colourpicker)
 
@@ -60,13 +59,18 @@ ui <- fluidPage(
           "A web application to analyze Oktoberfest data",
           HTML("&bull;"),
           "Data available from the",
-          tags$a(href ="https://www.opengov-muenchen.de/dataset/oktoberfest","Munich Open Data Portal")
+          tags$a(href = "https://www.opengov-muenchen.de/dataset/oktoberfest","Munich Open Data Portal")
       )
   ),
   
   sidebarLayout(
     sidebarPanel(
       
+      h2("OktoberfestR"),
+      h6("Code available on", tags$a(href = "https://github.com/darokun/OktoberfestR"), "GitHub"),
+      h6("Code license:", tags$a(href = ""), "MIT"),
+      
+      hr(),
       sliderInput("year", "Select a range of years:",
                   min = min(data$year), max = max(data$year), 
                   value = c(min(data$year), max(data$year)),
