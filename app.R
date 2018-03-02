@@ -25,8 +25,44 @@ data$beer_sold <- data$beer_sold * 100
 
 ui <- fluidPage(
   
-  h1("OktoberfestR"),
-  h3("A web application to analyze Oktoberfest data"),
+  ####   source for the header and parts of css: https://github.com/remyzum/Paris-Accidentologie-ShinyApp
+  
+  ####   It uses Javascript to detect the browser window size (initial size and any resize), 
+  ####   and use Shiny.onInputChange to send the data to the server code for processing. 
+  ####   It uses shiny:connected event to get the initial window size, as Shiny.onInputChange 
+  ####   is not ready for use until shiny is connected.
+  tags$head(tags$script('
+                        var dimension = [0, 0];
+                        $(document).on("shiny:connected", function(e) {
+                        dimension[0] = window.innerWidth;
+                        dimension[1] = window.innerHeight;
+                        Shiny.onInputChange("dimension", dimension);
+                        });
+                        $(window).resize(function(e) {
+                        dimension[0] = window.innerWidth;
+                        dimension[1] = window.innerHeight;
+                        Shiny.onInputChange("dimension", dimension);
+                        });
+                        ')),
+  
+  title = "OktoberfestR",
+  
+  shinyjs::useShinyjs(),
+  
+  tags$head(includeCSS(file.path("www", "app.css"))),
+  
+  div(id = "header",
+      
+      div(id = "title",
+          "OktoberfestR"),
+      
+      div(id = "subsubtitle",
+          "A web application to analyze Oktoberfest data",
+          HTML("&bull;"),
+          "Data available from the",
+          tags$a(href ="https://www.opengov-muenchen.de/dataset/oktoberfest","Munich Open Data Portal")
+      )
+  ),
   
   sidebarLayout(
     sidebarPanel(
@@ -58,6 +94,7 @@ ui <- fluidPage(
         
         tabPanel(
           title = "Dataset",
+          icon = icon("table"),
           id = "table",
           br(),
           br(),
@@ -67,16 +104,30 @@ ui <- fluidPage(
         
         tabPanel(
           title = "Plot",
+          icon = icon("bar-chart-o"),
           id = "plot",
           br(),
           br(),
           br(),
           plotlyOutput("plot")
+        ),
+        
+        tabPanel(
+          title = "About",
+          icon = icon("info-circle"),
+          id = "about",
+          includeMarkdown("about.md")
         )
       )
-
     )
-  )
+  ),
+  
+  hr(),
+  div(id = "footer",
+      div(id = "subsubtitle",
+          "2018 - Daloha Rodriguez-Molina -", 
+          tags$a(href ="https://twitter.com/darokun", "@darokun"))
+      )
 )
   
 
@@ -124,7 +175,8 @@ server <- function(input, output) {
             labels = scales::comma, 
             limits = c(0, 8000000),
             breaks = seq(0, 8000000, by = 1000000)) +
-          scale_x_continuous(breaks = seq(min(data$year), max(data$year), by = 1))
+          scale_x_continuous(breaks = seq(min(data$year), max(data$year), by = 1)) +
+          theme(axis.text.x = element_text(angle = 90, hjust = 1))
       )
     
       } else if (input$analysis == "visitors_lag") {
@@ -145,7 +197,8 @@ server <- function(input, output) {
               breaks = seq(-1000000, 1000000, by = 100000)
             ) +
             scale_x_continuous(
-              breaks = seq(min(data$year), max(data$year), by = 1))
+              breaks = seq(min(data$year), max(data$year), by = 1)) +
+            theme(axis.text.x = element_text(angle = 90, hjust = 1))
         )
         
       } else if (input$analysis == "beer_price_year") {
@@ -165,7 +218,8 @@ server <- function(input, output) {
               limits = c(0, 11.5), 
               breaks = seq(0, 11.5, by = 0.5)) +
             scale_x_continuous(
-              breaks = seq(min(data$year), max(data$year), by = 1))
+              breaks = seq(min(data$year), max(data$year), by = 1)) +
+            theme(axis.text.x = element_text(angle = 90, hjust = 1))
         )
         
       } else if (input$analysis == "beer_price_prev") {
@@ -185,7 +239,8 @@ server <- function(input, output) {
               breaks = seq(-10, +10, by = 0.05)) +
             scale_x_continuous(
               breaks = seq(min(data$year), max(data$year), by = 1), 
-              limits = c(min(data$year) - 1, max(data$year) + 1))
+              limits = c(min(data$year) - 1, max(data$year) + 1)) +
+            theme(axis.text.x = element_text(angle = 90, hjust = 1))
         )
         
       } else if (input$analysis == "beer_sold_year") {
@@ -205,7 +260,8 @@ server <- function(input, output) {
               breaks = seq(0, 500000, by = 50000)) +
             scale_x_continuous(
               breaks = seq(min(data$year), max(data$year), by = 1), 
-              limits = c(min(data$year) - 1, max(data$year) + 1))
+              limits = c(min(data$year) - 1, max(data$year) + 1)) +
+            theme(axis.text.x = element_text(angle = 90, hjust = 1))
         )
         
       } else if (input$analysis == "beer_visitor_day") {
@@ -225,7 +281,8 @@ server <- function(input, output) {
               breaks = seq(0, 1.5, by = 0.1)) +
             scale_x_continuous(
               breaks = seq(min(data$year), max(data$year), by = 1), 
-              limits = c(min(data$year) - 1, max(data$year) + 1))
+              limits = c(min(data$year) - 1, max(data$year) + 1)) +
+            theme(axis.text.x = element_text(angle = 90, hjust = 1))
         )
         
       } else if (input$analysis == "chicken_price_year") {
@@ -245,7 +302,8 @@ server <- function(input, output) {
               limits = c(0, 11.5), 
               breaks = seq(0, 11.5, by = 1)) +
             scale_x_continuous(
-              breaks = seq(min(data$year), max(data$year), by = 1))
+              breaks = seq(min(data$year), max(data$year), by = 1)) +
+            theme(axis.text.x = element_text(angle = 90, hjust = 1))
         )
         
       } else if (input$analysis == "chicken_price_prev") {
@@ -265,7 +323,8 @@ server <- function(input, output) {
               breaks = seq(-10, +10, by = 0.25)) +
             scale_x_continuous(
               breaks = seq(min(data$year), max(data$year), by = 1), 
-              limits = c(min(data$year) - 1, max(data$year) + 1))
+              limits = c(min(data$year) - 1, max(data$year) + 1)) +
+            theme(axis.text.x = element_text(angle = 90, hjust = 1))
         )
         
       }
