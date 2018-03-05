@@ -44,5 +44,4 @@ This web application uses the [MIT License](https://github.com/darokun/Oktoberfe
 
 ### To do list:
 * fix plot titles and axis labels
-* blog about it
 
